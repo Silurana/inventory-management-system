@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import AuthContext from "../context/AuthContext"; // Although not strictly needed if we rely on interceptor, good to have if we need user info
+import AuthContext from "../context/AuthContext"; 
 
 const AddProduct = () => {
   const navigate = useNavigate();
