@@ -41,49 +41,29 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "2rem",
-        }}
-      >
-        <h1
-          className="page-title"
-          style={{ margin: 0, textAlign: "center", flex: 1 }}
-        >
+      <div className="flex-responsive" style={{ marginBottom: "2rem" }}>
+        <h1 className="page-title" style={{ margin: 0 }}>
           Dashboard
         </h1>
         <button
           className="btn btn-primary"
           onClick={() => navigate("/add-product")}
         >
-          <FaPlus style={{ marginRight: "0.5rem" }} /> Add Product
+          <FaPlus /> Add Product
         </button>
       </div>
 
-      <div className="glass-panel" style={{ overflow: "hidden" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            textAlign: "left",
-          }}
-        >
+      {/* Desktop Table View */}
+      <div className="table-container desktop-only">
+        <table>
           <thead>
-            <tr
-              style={{
-                borderBottom: "1px solid var(--border)",
-                color: "var(--text-muted)",
-              }}
-            >
-              <th style={{ padding: "1rem" }}>Name</th>
-              <th style={{ padding: "1rem" }}>Barcode</th>
-              <th style={{ padding: "1rem" }}>Price</th>
-              <th style={{ padding: "1rem" }}>Stock</th>
-              <th style={{ padding: "1rem" }}>Category</th>
-              <th style={{ padding: "1rem" }}>Actions</th>
+            <tr>
+              <th>Name</th>
+              <th>Barcode</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Category</th>
+              <th style={{ width: "80px" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -91,7 +71,7 @@ const Dashboard = () => {
               <tr>
                 <td
                   colSpan="6"
-                  style={{ padding: "2rem", textAlign: "center" }}
+                  style={{ textAlign: "center", padding: "2rem" }}
                 >
                   Loading...
                 </td>
@@ -100,27 +80,20 @@ const Dashboard = () => {
               <tr>
                 <td
                   colSpan="6"
-                  style={{ padding: "2rem", textAlign: "center" }}
+                  style={{ textAlign: "center", padding: "2rem" }}
                 >
                   No products found.
                 </td>
               </tr>
             ) : (
               products.map((product) => (
-                <tr
-                  key={product._id}
-                  style={{ borderBottom: "1px solid var(--border)" }}
-                >
-                  <td style={{ padding: "1rem" }}>{product.name}</td>
-                  <td style={{ padding: "1rem", fontFamily: "monospace" }}>
-                    {product.barcode}
-                  </td>
-                  <td style={{ padding: "1rem" }}>
-                    ${product.price.toFixed(2)}
-                  </td>
-                  <td style={{ padding: "1rem" }}>{product.countInStock}</td>
-                  <td style={{ padding: "1rem" }}>{product.category}</td>
-                  <td style={{ padding: "1rem" }}>
+                <tr key={product._id}>
+                  <td>{product.name}</td>
+                  <td style={{ fontFamily: "monospace" }}>{product.barcode}</td>
+                  <td>${product.price.toFixed(2)}</td>
+                  <td>{product.countInStock}</td>
+                  <td>{product.category}</td>
+                  <td>
                     <button
                       className="btn"
                       style={{ padding: "0.5rem", color: "#ef4444" }}
@@ -134,6 +107,95 @@ const Dashboard = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card Layout */}
+      <div className="mobile-only">
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>
+        ) : products.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "2rem" }}>
+            No products found.
+          </div>
+        ) : (
+          products.map((product) => (
+            <div key={product._id} className="mobile-card">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                <div>
+                  <h3
+                    style={{
+                      fontSize: "1.1rem",
+                      color: "var(--text-main)",
+                      marginBottom: "0.25rem",
+                    }}
+                  >
+                    {product.name}
+                  </h3>
+                  <code
+                    style={{ fontSize: "0.75rem", color: "var(--primary)" }}
+                  >
+                    {product.barcode}
+                  </code>
+                </div>
+                <button
+                  className="btn"
+                  style={{
+                    padding: "0.5rem",
+                    color: "#ef4444",
+                    background: "rgba(239, 68, 68, 0.1)",
+                  }}
+                  onClick={() => handleDelete(product._id)}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+
+              <div className="mobile-card-row">
+                <span className="mobile-card-label">Category</span>
+                <span
+                  className="mobile-card-value"
+                  style={{ fontSize: "0.85rem" }}
+                >
+                  {product.category}
+                </span>
+              </div>
+
+              <div
+                className="mobile-card-row"
+                style={{
+                  marginTop: "0.5rem",
+                  borderTop: "1px solid var(--border-light)",
+                  paddingTop: "0.75rem",
+                }}
+              >
+                <div>
+                  <div className="mobile-card-label">Price</div>
+                  <div className="mobile-card-value">
+                    ${product.price.toFixed(2)}
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div className="mobile-card-label">Stock Status</div>
+                  <div
+                    className={`mobile-card-value`}
+                    style={{
+                      color: product.countInStock < 10 ? "#f59e0b" : "#10b981",
+                    }}
+                  >
+                    {product.countInStock} units
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

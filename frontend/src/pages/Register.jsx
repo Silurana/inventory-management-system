@@ -25,19 +25,23 @@ const Register = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "80vh",
+        width: "100%",
+        padding: "1rem 0",
       }}
     >
       <div
         className="glass-panel"
-        style={{ padding: "3rem", width: "100%", maxWidth: "400px" }}
+        style={{ padding: "2rem", width: "100%", maxWidth: "400px" }}
       >
-        <h1 className="page-title" style={{ textAlign: "center" }}>
+        <h1
+          className="page-title"
+          style={{ textAlign: "center", marginBottom: "2rem" }}
+        >
           Register
         </h1>
         <form
           onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+          style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
         >
           <input
             type="text"
@@ -45,6 +49,7 @@ const Register = () => {
             className="input-field"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
           />
           <input
             type="email"
@@ -52,6 +57,7 @@ const Register = () => {
             className="input-field"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             type="password"
@@ -59,8 +65,13 @@ const Register = () => {
             className="input-field"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ padding: "1rem", marginTop: "0.5rem" }}
+          >
             Sign Up
           </button>
         </form>
@@ -69,11 +80,16 @@ const Register = () => {
             marginTop: "1.5rem",
             textAlign: "center",
             color: "var(--text-muted)",
+            fontSize: "0.95rem",
           }}
         >
           Already have an account?{" "}
           <span
-            style={{ color: "var(--primary)", cursor: "pointer" }}
+            style={{
+              color: "var(--primary)",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
             onClick={() => navigate("/login")}
           >
             Login

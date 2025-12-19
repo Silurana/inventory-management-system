@@ -11,7 +11,6 @@ import {
 const SellProduct = () => {
   const [barcode, setBarcode] = useState("");
   const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
@@ -20,7 +19,6 @@ const SellProduct = () => {
     e.preventDefault();
     if (!barcode) return;
 
-    setLoading(true);
     setError(null);
 
     try {
@@ -52,10 +50,9 @@ const SellProduct = () => {
         }
       }
       setBarcode("");
-    } catch (err) {
+    } catch {
       setError("Product not found");
     } finally {
-      setLoading(false);
       inputRef.current?.focus();
     }
   };
@@ -109,11 +106,11 @@ const SellProduct = () => {
   return (
     <div
       className="grid-responsive"
-      style={{ height: "100%", alignItems: "start" }}
+      style={{ alignItems: "start", gap: "2rem" }}
     >
       {/* Left Col: Cart & Scanning */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-        <h1 className="page-title" style={{ textAlign: "center" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <h1 className="page-title" style={{ marginBottom: "0.5rem" }}>
           Point of Sale
         </h1>
 
@@ -121,13 +118,13 @@ const SellProduct = () => {
         <div
           className="glass-panel"
           style={{
-            padding: "1.5rem",
+            padding: "1rem 1.5rem",
             display: "flex",
             gap: "1rem",
             alignItems: "center",
           }}
         >
-          <FaBarcode size={24} color="var(--primary)" />
+          <FaBarcode size={24} style={{ color: "var(--primary)" }} />
           <form onSubmit={handleScan} style={{ flex: 1, display: "flex" }}>
             <input
               ref={inputRef}
@@ -139,68 +136,69 @@ const SellProduct = () => {
               autoComplete="off"
             />
           </form>
-          {error && (
-            <span style={{ color: "#ef4444", fontWeight: "bold" }}>
-              {error}
-            </span>
-          )}
         </div>
 
-        {/* Cart Table */}
-        <div className="glass-panel" style={{ flex: 1, overflow: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead
-              style={{
-                position: "sticky",
-                top: 0,
-                background: "var(--bg-card)",
-              }}
-            >
-              <tr
-                style={{
-                  textAlign: "left",
-                  borderBottom: "1px solid var(--border)",
-                }}
-              >
-                <th style={{ padding: "1rem" }}>Product</th>
-                <th style={{ padding: "1rem" }}>Price</th>
-                <th style={{ padding: "1rem" }}>Qty</th>
-                <th style={{ padding: "1rem" }}>Total</th>
-                <th style={{ padding: "1rem" }}></th>
+        {error && (
+          <div
+            style={{
+              color: "#ef4444",
+              fontSize: "0.9rem",
+              fontWeight: "600",
+              padding: "0 0.5rem",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {/* Desktop Cart Table */}
+        <div className="table-container desktop-only">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th style={{ width: "50px" }}></th>
               </tr>
             </thead>
             <tbody>
               {cart.map((item) => (
-                <tr
-                  key={item.product._id}
-                  style={{ borderBottom: "1px solid var(--border)" }}
-                >
-                  <td style={{ padding: "1rem" }}>
-                    <div style={{ fontWeight: "bold" }}>
-                      {item.product.name}
-                    </div>
+                <tr key={item.product._id}>
+                  <td>
+                    <div style={{ fontWeight: "600" }}>{item.product.name}</div>
                     <div
-                      style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+                      style={{
+                        fontSize: "0.75rem",
+                        color: "var(--text-muted)",
+                        fontFamily: "monospace",
+                      }}
                     >
                       {item.product.barcode}
                     </div>
                   </td>
-                  <td style={{ padding: "1rem" }}>${item.product.price}</td>
-                  <td style={{ padding: "1rem" }}>
+                  <td>${item.product.price.toFixed(2)}</td>
+                  <td>
                     <input
                       type="number"
                       min="1"
+                      className="input-field"
                       value={item.qty}
                       onChange={(e) =>
                         updateQty(item.product._id, parseInt(e.target.value))
                       }
-                      style={{ width: "60px", padding: "0.25rem" }}
+                      style={{
+                        width: "65px",
+                        padding: "0.4rem",
+                        textAlign: "center",
+                      }}
                     />
                   </td>
-                  <td style={{ padding: "1rem" }}>
+                  <td style={{ fontWeight: "600" }}>
                     ${(item.product.price * item.qty).toFixed(2)}
                   </td>
-                  <td style={{ padding: "1rem" }}>
+                  <td>
                     <button
                       className="btn"
                       style={{ color: "#ef4444", padding: "0.5rem" }}
@@ -216,32 +214,158 @@ const SellProduct = () => {
                   <td
                     colSpan="5"
                     style={{
-                      padding: "3rem",
+                      padding: "4rem 2rem",
                       textAlign: "center",
                       color: "var(--text-muted)",
                     }}
                   >
-                    Cart is empty. Scan items to begin.
+                    <FaBarcode
+                      size={32}
+                      style={{ marginBottom: "1rem", opacity: 0.2 }}
+                    />
+                    <p>Cart is empty. Scan items to begin.</p>
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Cart Card View */}
+        <div className="mobile-only">
+          {cart.length === 0 ? (
+            <div
+              className="glass-panel"
+              style={{
+                padding: "3rem 1rem",
+                textAlign: "center",
+                color: "var(--text-muted)",
+              }}
+            >
+              <FaBarcode
+                size={40}
+                style={{ marginBottom: "1rem", opacity: 0.2 }}
+              />
+              <p>Your cart is empty</p>
+            </div>
+          ) : (
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            >
+              {cart.map((item) => (
+                <div
+                  key={item.product._id}
+                  className="mobile-card"
+                  style={{ marginBottom: 0 }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      marginBottom: "0.75rem",
+                    }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ fontSize: "1rem", fontWeight: "600" }}>
+                        {item.product.name}
+                      </h4>
+                      <code
+                        style={{
+                          fontSize: "0.7rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        {item.product.barcode}
+                      </code>
+                    </div>
+                    <button
+                      className="btn"
+                      style={{
+                        color: "#ef4444",
+                        background: "rgba(239, 68, 68, 0.05)",
+                        padding: "0.4rem",
+                      }}
+                      onClick={() => removeFromCart(item.product._id)}
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "0.9rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        Qty:
+                      </span>
+                      <input
+                        type="number"
+                        min="1"
+                        className="input-field"
+                        value={item.qty}
+                        onChange={(e) =>
+                          updateQty(item.product._id, parseInt(e.target.value))
+                        }
+                        style={{
+                          width: "60px",
+                          padding: "0.3rem",
+                          fontSize: "0.9rem",
+                          textAlign: "center",
+                        }}
+                      />
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div
+                        style={{
+                          fontSize: "0.8rem",
+                          color: "var(--text-muted)",
+                        }}
+                      >
+                        Total
+                      </div>
+                      <div
+                        style={{ fontWeight: "700", color: "var(--primary)" }}
+                      >
+                        ${(item.product.price * item.qty).toFixed(2)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Right Col: Checkout Summary */}
-      <div>
-        <div className="glass-panel" style={{ padding: "2rem" }}>
+      <div style={{ position: "sticky", top: "120px" }}>
+        <div className="glass-panel" style={{ padding: "1.5rem" }}>
           <h2
             style={{
-              marginBottom: "2rem",
+              marginBottom: "1.5rem",
               display: "flex",
               alignItems: "center",
-              gap: "0.5rem",
+              gap: "0.75rem",
+              fontSize: "1.25rem",
             }}
           >
-            <FaCalculator /> Summary
+            <FaCalculator style={{ color: "var(--primary)" }} /> Summary
           </h2>
 
           <div
@@ -249,33 +373,24 @@ const SellProduct = () => {
               display: "flex",
               justifyContent: "space-between",
               marginBottom: "1rem",
-              fontSize: "1.1rem",
-            }}
-          >
-            <span>Subtotal</span>
-            <span>${calculateTotal()}</span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "2rem",
-              fontSize: "1.1rem",
+              fontSize: "1rem",
               color: "var(--text-muted)",
             }}
           >
-            <span>Tax (0%)</span>
-            <span>$0.00</span>
+            <span>Items ({cart.reduce((acc, i) => acc + i.qty, 0)})</span>
+            <span>${calculateTotal()}</span>
           </div>
+
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               marginBottom: "2rem",
               fontSize: "1.5rem",
-              fontWeight: "bold",
+              fontWeight: "700",
               borderTop: "1px solid var(--border)",
-              paddingTop: "1rem",
+              paddingTop: "1.5rem",
+              color: "var(--text-main)",
             }}
           >
             <span>Total</span>
@@ -284,7 +399,7 @@ const SellProduct = () => {
 
           <button
             className="btn btn-primary"
-            style={{ width: "100%", fontSize: "1.2rem", padding: "1rem" }}
+            style={{ width: "100%", fontSize: "1.1rem", padding: "1rem" }}
             disabled={cart.length === 0 || checkoutLoading}
             onClick={handleCheckout}
           >

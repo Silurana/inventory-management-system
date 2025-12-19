@@ -6,42 +6,65 @@ const AdminBarcodeGen = () => {
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+      }}
     >
-      <h1 className="page-title" style={{ textAlign: "center" }}>
-        Barcode Generator
-      </h1>
+      <h1 className="page-title">Barcode Generator</h1>
       <div
         className="glass-panel"
-        style={{ padding: "2rem", maxWidth: "500px", width: "100%" }}
+        style={{ padding: "1.5rem", maxWidth: "500px", width: "100%" }}
       >
-        <input
-          type="text"
-          className="input-field"
-          placeholder="Enter text/number to generate barcode..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          style={{ marginBottom: "2rem" }}
-        />
+        <div style={{ marginBottom: "1.5rem" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--text-muted)",
+              fontSize: "0.9rem",
+              fontWeight: 500,
+            }}
+          >
+            Data to Encode
+          </label>
+          <input
+            type="text"
+            className="input-field"
+            placeholder="Enter text or number..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
 
-        {text && (
+        {text ? (
           <div
             style={{
               background: "white",
-              padding: "20px",
-              borderRadius: "8px",
+              padding: "1rem",
+              borderRadius: "12px",
               display: "flex",
               justifyContent: "center",
+              overflowX: "auto",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             }}
           >
-            <Barcode value={text} />
+            <Barcode value={text} width={1.8} height={80} fontSize={14} />
           </div>
-        )}
-
-        {!text && (
-          <p style={{ textAlign: "center", color: "var(--text-muted)" }}>
-            Type above to preview
-          </p>
+        ) : (
+          <div
+            style={{
+              textAlign: "center",
+              color: "var(--text-muted)",
+              padding: "2rem",
+              border: "2px dashed var(--border)",
+              borderRadius: "12px",
+            }}
+          >
+            Type above to preview barcode
+          </div>
         )}
       </div>
     </div>

@@ -1,7 +1,6 @@
-import { useState} from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import AuthContext from "../context/AuthContext"; 
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -40,19 +39,19 @@ const AddProduct = () => {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <h1 className="page-title" style={{ textAlign: "center" }}>
-        Add New Product
-      </h1>
-      <div className="glass-panel" style={{ padding: "2rem" }}>
+    <div style={{ width: "100%", maxWidth: "700px", margin: "0 auto" }}>
+      <h1 className="page-title">Add New Product</h1>
+      <div className="glass-panel" style={{ padding: "1.5rem" }}>
         {error && (
           <div
             style={{
               color: "#ef4444",
               marginBottom: "1rem",
               background: "rgba(239, 68, 68, 0.1)",
-              padding: "0.5rem",
-              borderRadius: "4px",
+              padding: "0.75rem",
+              borderRadius: "8px",
+              border: "1px solid rgba(239, 68, 68, 0.2)",
+              fontSize: "0.9rem",
             }}
           >
             {error}
@@ -61,7 +60,7 @@ const AddProduct = () => {
 
         <form
           onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
         >
           <div>
             <label
@@ -69,6 +68,8 @@ const AddProduct = () => {
                 display: "block",
                 marginBottom: "0.5rem",
                 color: "var(--text-muted)",
+                fontSize: "0.9rem",
+                fontWeight: 500,
               }}
             >
               Product Name
@@ -80,6 +81,7 @@ const AddProduct = () => {
               className="input-field"
               value={formData.name}
               onChange={handleChange}
+              placeholder="e.g. Wireless Mouse"
             />
           </div>
 
@@ -89,11 +91,13 @@ const AddProduct = () => {
                 display: "block",
                 marginBottom: "0.5rem",
                 color: "var(--text-muted)",
+                fontSize: "0.9rem",
+                fontWeight: 500,
               }}
             >
               Barcode
             </label>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
+            <div className="flex-responsive" style={{ gap: "0.75rem" }}>
               <input
                 type="text"
                 name="barcode"
@@ -102,11 +106,16 @@ const AddProduct = () => {
                 value={formData.barcode}
                 onChange={handleChange}
                 placeholder="Scan or type..."
+                style={{ flex: 1 }}
               />
               <button
                 type="button"
                 className="btn"
-                style={{ border: "1px solid var(--border)" }}
+                style={{
+                  border: "1px solid var(--border)",
+                  padding: "0.875rem 1.5rem",
+                  whiteSpace: "nowrap",
+                }}
                 onClick={() =>
                   setFormData({
                     ...formData,
@@ -121,19 +130,15 @@ const AddProduct = () => {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-            }}
-          >
+          <div className="grid-responsive">
             <div>
               <label
                 style={{
                   display: "block",
                   marginBottom: "0.5rem",
                   color: "var(--text-muted)",
+                  fontSize: "0.9rem",
+                  fontWeight: 500,
                 }}
               >
                 Category
@@ -145,6 +150,7 @@ const AddProduct = () => {
                 className="input-field"
                 value={formData.category}
                 onChange={handleChange}
+                placeholder="e.g. Electronics"
               />
             </div>
             <div>
@@ -153,6 +159,8 @@ const AddProduct = () => {
                   display: "block",
                   marginBottom: "0.5rem",
                   color: "var(--text-muted)",
+                  fontSize: "0.9rem",
+                  fontWeight: 500,
                 }}
               >
                 Price ($)
@@ -165,6 +173,7 @@ const AddProduct = () => {
                 className="input-field"
                 value={formData.price}
                 onChange={handleChange}
+                placeholder="0.00"
               />
             </div>
           </div>
@@ -175,6 +184,8 @@ const AddProduct = () => {
                 display: "block",
                 marginBottom: "0.5rem",
                 color: "var(--text-muted)",
+                fontSize: "0.9rem",
+                fontWeight: 500,
               }}
             >
               Count In Stock
@@ -186,6 +197,7 @@ const AddProduct = () => {
               className="input-field"
               value={formData.countInStock}
               onChange={handleChange}
+              placeholder="0"
             />
           </div>
 
@@ -195,6 +207,8 @@ const AddProduct = () => {
                 display: "block",
                 marginBottom: "0.5rem",
                 color: "var(--text-muted)",
+                fontSize: "0.9rem",
+                fontWeight: 500,
               }}
             >
               Description
@@ -206,6 +220,7 @@ const AddProduct = () => {
               style={{ minHeight: "100px", resize: "vertical" }}
               value={formData.description}
               onChange={handleChange}
+              placeholder="Detailed product description..."
             />
           </div>
 
@@ -213,9 +228,9 @@ const AddProduct = () => {
             type="submit"
             className="btn btn-primary"
             disabled={loading}
-            style={{ marginTop: "1rem" }}
+            style={{ marginTop: "0.5rem", width: "100%", padding: "1rem" }}
           >
-            {loading ? "Creating..." : "Create Product"}
+            {loading ? "Creating..." : "Add Product to Inventory"}
           </button>
         </form>
       </div>
